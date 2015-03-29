@@ -67,6 +67,8 @@
 **/
 + (instancetype)queryMatchingAll;
 
+- (id)initWithQueryString:(NSString *)inQueryString queryParameters:(NSArray *)inQueryParameters;
+
 @property (nonatomic, strong, readonly) NSString *queryString;
 @property (nonatomic, strong, readonly) NSArray *queryParameters;
 
