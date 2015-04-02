@@ -14,7 +14,7 @@ Pod::Spec.new do |s|
   # use a builtin version of sqlite3
   s.subspec 'standard' do |ss|
     ss.library = 'sqlite3'
-    ss.dependency 'CocoaLumberjack', '~> 1'
+    ss.dependency 'CocoaLumberjack', '~> 2'
     ss.source_files = 'YapDatabase/**/*.{h,m,mm}'
     ss.private_header_files = 'YapDatabase/**/Internal/*.h'
     ss.xcconfig = { 'OTHER_LDFLAGS' => '-weak_library /usr/lib/libc++.dylib' }
