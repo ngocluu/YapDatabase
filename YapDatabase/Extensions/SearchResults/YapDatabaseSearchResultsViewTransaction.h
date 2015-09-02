@@ -2,6 +2,7 @@
 
 #import "YapDatabaseViewTransaction.h"
 #import "YapDatabaseSearchQueue.h"
+#import "YapDatabaseQuery.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -25,7 +26,12 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  * Represents the most recent search query that is providing the search results.
 **/
-- (NSString *)query;
+- (NSString *)ftsQuery;
+
+/**
+ * Represents the most recent search query that is providing the search results.
+ **/
+- (YapDatabaseQuery *)indexQuery;
 
 /**
  * Updates the view to include search results for the given query.
@@ -35,10 +41,20 @@ NS_ASSUME_NONNULL_BEGIN
  * 
  * @see performSearchWithQueue:
 **/
-- (void)performSearchFor:(NSString *)query;
+- (void)performFTSSearchFor:(NSString *)ftsQuery;
 
 /**
- * This method works similar to performSearchFor:,
+ * Updates the view to include search results for the given query.
+ *
+ * This method will run the given query on the parent secondary index extension,
+ * and then properly pipe the results into the view.
+ *
+ * @see performSearchWithQueue:
+ **/
+- (void)performSecondaryIndexSearchFor:(YapDatabaseQuery *)query;
+
+/**
+ * This method works similar to performFTSSearchFor:,
  * but allows you to use a special search "queue" that gives you more control over how the search progresses.
  * 
  * With a search queue, the transaction will skip intermediate queries,
