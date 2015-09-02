@@ -1,6 +1,6 @@
 #import "YapDatabaseSearchQueue.h"
 #import "YapDatabaseSearchQueuePrivate.h"
-
+#import "YapDatabaseQuery.h"
 #import <libkern/OSAtomic.h>
 
 @interface YapDatabaseSearchQueueControl : NSObject
@@ -58,15 +58,25 @@
 #pragma mark Public API
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-- (void)enqueueQuery:(NSString *)query
+- (void)enqueueFTSQuery:(NSString *)query
 {
 	if (query == nil) return;
 	
 	OSSpinLockLock(&lock);
 	{
-		[queue addObject:[query copy]];
+        [queue addObject:[query copy]];
 	}
 	OSSpinLockUnlock(&lock);
+}
+- (void)enqueueSecondaryIndexQuery:(YapDatabaseQuery *)query
+{
+    if (query == nil) return;
+    
+    OSSpinLockLock(&lock);
+    {
+        [queue addObject:query];
+    }
+    OSSpinLockUnlock(&lock);
 }
 
 - (void)abortSearchInProgressAndRollback:(BOOL)shouldRollback
@@ -94,7 +104,7 @@
 		
 		for (id obj in queue)
 		{
-			if ([obj isKindOfClass:[NSString class]])
+			if ([obj isKindOfClass:[NSString class]] || [obj isKindOfClass:[YapDatabaseQuery class]])
 			{
 				[queries addObject:obj];
 			}
@@ -113,7 +123,7 @@
 	{
 		for (id obj in queue)
 		{
-			if ([obj isKindOfClass:[NSString class]])
+			if ([obj isKindOfClass:[NSString class]] || [obj isKindOfClass:[YapDatabaseQuery class]])
 			{
 				count++;
 			}
@@ -128,9 +138,9 @@
 #pragma mark Private API
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-- (NSString *)flushQueue
+- (id)flushQueue
 {
-	NSString *lastQuery = nil;
+	id lastQuery = nil;
 	
 	OSSpinLockLock(&lock);
 	{
@@ -140,9 +150,9 @@
 		queueHasAbort = NO;
 		queueHasRollback = NO;
 		
-		if ([lastObject isKindOfClass:[NSString class]])
+		if ([lastObject isKindOfClass:[NSString class]] || [lastObject isKindOfClass:[YapDatabaseQuery class]])
 		{
-			lastQuery = (NSString *)lastObject;
+			lastQuery = lastObject;
 		}
 	}
 	OSSpinLockUnlock(&lock);

@@ -1,4 +1,5 @@
 #import <Foundation/Foundation.h>
+#import "YapDatabaseQuery.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -25,7 +26,13 @@ NS_ASSUME_NONNULL_BEGIN
  * Use this method to enqueue the proper query.
  * This is generally done when the search field changes (due to user interaction).
 **/
-- (void)enqueueQuery:(NSString *)query;
+- (void)enqueueFTSQuery:(NSString*)query;
+
+/**
+ * Use this method to enqueue the proper query.
+ * This is generally done when the search field changes (due to user interaction).
+ **/
+- (void)enqueueSecondaryIndexQuery:(YapDatabaseQuery*)query;
 
 /**
  * These methods allow you to inspect the queue.
