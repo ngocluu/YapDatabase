@@ -128,8 +128,8 @@ NS_ASSUME_NONNULL_BEGIN
  *    [self.tableView endUpdates];
  * }
 **/
-- (void)getSectionChanges:(NSArray<YapDatabaseViewSectionChange *> * _Nonnull * _Nullable)sectionChangesPtr
-               rowChanges:(NSArray<YapDatabaseViewRowChange *> * _Nonnull * _Nullable)rowChangesPtr
+- (void)getSectionChanges:(NSArray<YapDatabaseViewSectionChange *> * _Nullable * _Nullable)sectionChangesPtr
+               rowChanges:(NSArray<YapDatabaseViewRowChange *> * _Nullable * _Nullable)rowChangesPtr
          forNotifications:(NSArray<NSNotification *> *)notifications
              withMappings:(YapDatabaseViewMappings *)mappings;
 
